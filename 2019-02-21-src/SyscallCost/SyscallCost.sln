@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{911E67C6-3D85-4FCE-B560-20A9C3E3FF48}") = "SyscallCost", "SyscallCost.exe", "{7CB5AE47-031B-4DB9-B408-B65AA69EBA0C}"
+	ProjectSection(DebuggerProjectSystem) = preProject
+		PortSupplier = 00000000-0000-0000-0000-000000000000
+		Executable = C:\home\disciplinas\SO\2s2018-2019\src\Aulas\2019-02-21-src\SyscallCost\SyscallCost.exe
+		RemoteMachine = DESKTOP-2JGK2MO
+		StartingDirectory = C:\home\disciplinas\SO\2s2018-2019\src\Aulas\2019-02-21-src\SyscallCost
+		Environment = Default
+		LaunchingEngine = 00000000-0000-0000-0000-000000000000
+		UseLegacyDebugEngines = No
+		LaunchSQLEngine = No
+		AttachLaunchAction = No
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7CB5AE47-031B-4DB9-B408-B65AA69EBA0C}.Release|x64.ActiveCfg = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

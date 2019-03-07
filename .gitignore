@@ -1,0 +1,10 @@
+# Ignore Visual Studio temp files and artifacts
+*.exe
+debug/
+release/
+*.pdb
+*.sdf
+*.obj
+*.ilk
+.vs
+
