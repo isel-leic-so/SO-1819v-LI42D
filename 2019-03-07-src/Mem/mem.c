@@ -3,7 +3,7 @@
 #include <psapi.h>
 #include <stdio.h>
 
-#define DATALEN (1024*1024*300)
+#define DATALEN (1024*1024*400)
 
 static BYTE data[DATALEN] = { 1 };
 
@@ -11,11 +11,12 @@ VOID ShowPhysicalAvaiableMem(LPCSTR msg) {
 	MEMORYSTATUSEX ms;
 	PERFORMANCE_INFORMATION pi;
 	const int MB = 1024 * 1024;
-	printf("%s:\n", msg);
+
 	ms.dwLength = sizeof(ms);
 
+	printf("%s:\n", msg);
 	
-	if (!GlobalMemoryStatusEx(&ms) || !GetPerformanceInfo(&pi, sizeof(pi)))
+	if (!GlobalMemoryStatusEx(&ms))
 		printf("Error %d getting available memory\n\n", GetLastError());
 	else {
 		__int64 used_mem = (ms.ullTotalPhys - ms.ullAvailPhys) / MB;

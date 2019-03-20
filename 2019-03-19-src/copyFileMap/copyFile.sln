@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "copyFileMap", "copyFile.vcxproj", "{FB8AEE31-41CA-45B5-9564-7728E3B26887}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FB8AEE31-41CA-45B5-9564-7728E3B26887}.Debug|Win32.ActiveCfg = Release|x64
+		{FB8AEE31-41CA-45B5-9564-7728E3B26887}.Debug|Win32.Build.0 = Release|x64
+		{FB8AEE31-41CA-45B5-9564-7728E3B26887}.Release|Win32.ActiveCfg = Release|Win32
+		{FB8AEE31-41CA-45B5-9564-7728E3B26887}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

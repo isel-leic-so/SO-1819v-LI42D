@@ -1,0 +1,28 @@
+<Configuration>
+  <SettingsComponent>
+    <string />
+    <integer />
+    <boolean>
+      <setting name="SolutionAnalysisEnabled">False</setting>
+    </boolean>
+  </SettingsComponent>
+  <RecentFiles>
+    <RecentFiles>
+      <File id="FB8AEE31-41CA-45B5-9564-7728E3B26887/f:copyFileMap.cpp" caret="1717" fromTop="29" />
+    </RecentFiles>
+    <RecentEdits>
+      <File id="FB8AEE31-41CA-45B5-9564-7728E3B26887/f:copyFileMap.cpp" caret="1212" fromTop="21" />
+      <File id="FB8AEE31-41CA-45B5-9564-7728E3B26887/f:copyFileMap.cpp" caret="1839" fromTop="11" />
+    </RecentEdits>
+  </RecentFiles>
+  <NAntValidationSettings>
+    <NAntPath value="" />
+  </NAntValidationSettings>
+  <UnitTestRunner>
+    <Providers />
+  </UnitTestRunner>
+  <UnitTestRunnerNUnit>
+    <NUnitInstallDir>C:\Program Files (x86)\NUnit 2.5.10\bin\net-2.0\</NUnitInstallDir>
+    <UseAddins>Never</UseAddins>
+  </UnitTestRunnerNUnit>
+</Configuration>
