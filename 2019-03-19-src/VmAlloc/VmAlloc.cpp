@@ -11,7 +11,7 @@
 
 // 512 MBytes allocation!
 #define MEM_SIZE (512*1024*1024)
-
+ 
 
 int _tmain(int argc, _TCHAR* argv[])
 {
@@ -20,7 +20,8 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	// Just show the minimum reserve size (granularity size) end page size
 	GetSystemInfo(&inf);
-	_tprintf(_T("region size=%X\n"), inf.dwAllocationGranularity);
+	 
+	_tprintf(_T("region minimum size=%X\n"), inf.dwAllocationGranularity);
 	_tprintf(_T("page size=%X\n"), inf.dwPageSize);
 
 	_tprintf(_T("Start: press return to continue...")); getchar();

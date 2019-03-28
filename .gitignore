@@ -2,6 +2,7 @@
 *.exe
 debug/
 release/
+x64/
 *.pdb
 *.sdf
 *.obj
