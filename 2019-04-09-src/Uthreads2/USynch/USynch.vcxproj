@@ -154,7 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\UThread\UThread.vcxproj">
-      <Project>{2650ca3c-1dde-4d98-96d6-927b382f409a}</Project>
+      <Project>{a5dbdb4a-81fc-4002-9811-70b9cb033552}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

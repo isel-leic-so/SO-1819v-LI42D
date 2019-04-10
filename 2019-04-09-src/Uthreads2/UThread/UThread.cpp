@@ -276,10 +276,35 @@ BOOL UtAlive(HANDLE hThread) {
 	return FALSE;
 }
 
+BOOL IsReadyThread(PUTHREAD pthread) {
+	PLIST_ENTRY curr = ReadyQueue.Flink;
+	while (curr != &ReadyQueue) {
+		PUTHREAD tcurr =
+			CONTAINING_RECORD(curr, UTHREAD, Link);
+		if (tcurr = pthread) return TRUE;
+	}
+	return FALSE;
+}
 
+// Primeira versão de UtJoin com espera activa.
+// Podemos fazer melhor, pois o pooling implica consumo de CPU
+BOOL UtJoin0(HANDLE hthread) {
+	if (hthread == UtSelf() || !UtAlive(hthread)) return FALSE;
+	PUTHREAD pthread = (PUTHREAD)hthread;
+
+	// Pooling sobre a existência na ready queue da thread  "joined"
+	while (IsReadyThread(pthread))
+		UtYield();
+	
+	return TRUE;
+}
+
+// Versão de UtJoin com espera passiva
+// A thread invocante bloqueia-se na fila de espera
+// da thread "joined"
+// Melhor, pois não há consumo de CPU desnecessário!
 BOOL UtJoin(HANDLE hthread) {
-	if (hthread == UtSelf()) return FALSE;
-	if (!UtAlive(hthread)) return TRUE;
+	if (hthread == UtSelf() || !UtAlive(hthread)) return FALSE;
 
 	// insert current thread in joiners list da thread hthread
 	PUTHREAD thread = (PUTHREAD)hthread;
