@@ -15,7 +15,7 @@
 
 #include <Windows.h>
 
-#undef CONTAINING_RECORD
+//#undef CONTAINING_RECORD
 #ifndef CONTAINING_RECORD
 
 #define CONTAINING_RECORD(address, type, field) \

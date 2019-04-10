@@ -38,7 +38,7 @@ VOID Test1_Thread (UT_ARGUMENT Argument) {
 	ULONG Index;
 	Char = (UCHAR) Argument;	
 	 
-	for (Index = 0; Index < 10000; ++Index) {
+	for (Index = 0; Index < 100; ++Index) {
 	    putchar(Char);
 		
 	    if ((rand() % 4) == 0) {
@@ -65,7 +65,23 @@ VOID Test1 ()  {
 	printf("\n\n :: Test 1 - END :: \n");
 }
 
+VOID Func1(UT_ARGUMENT arg) {
+	printf("Start Func1\n");
+	UtYield();
+	printf("End Func1\n");
+}
 
+VOID Func2(UT_ARGUMENT arg) {
+	printf("Func2\n");
+}
+
+VOID Test2() {
+	printf("\n :: Test 2 - BEGIN :: \n\n");
+	UtCreate(Func1, NULL);
+	UtCreate(Func2, NULL);
+	UtRun();
+	printf("\n\n :: Test 2 - END :: \n");
+}
 
 
 
@@ -73,7 +89,7 @@ VOID Test1 ()  {
 int main () {
 	UtInit();
  
-	Test1();
+	Test2();
 	getchar();
 	
 	 

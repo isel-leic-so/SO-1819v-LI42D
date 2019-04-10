@@ -3,7 +3,7 @@
 #ifdef CALC_EXPORTS
 #define CALC_API _declspec(dllexport)
 #else
-#define CALC_API
+#define CALC_API _declspec(dllimport)
 #endif
 
 #ifdef __cplusplus
