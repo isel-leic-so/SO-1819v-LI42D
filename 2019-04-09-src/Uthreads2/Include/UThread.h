@@ -104,6 +104,9 @@ BOOL UtAlive(HANDLE ThreadHandle);
 UTHREAD_API
 BOOL UtJoin(HANDLE ThreadHandle);
 
+UTHREAD_API
+DWORD UtGetSwitchCount();
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

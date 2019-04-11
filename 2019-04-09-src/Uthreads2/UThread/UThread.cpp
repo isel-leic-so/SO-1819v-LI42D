@@ -214,7 +214,6 @@ VOID UtExit () {
 		// put on ready list
 		UtActivate(thread);
 	}
-
 	InternalExit(RunningThread, ExtractNextReadyThread());
 	_ASSERTE(!"Not Supposed to be here!");
 }
