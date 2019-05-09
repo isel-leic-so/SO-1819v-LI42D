@@ -1,0 +1,49 @@
+// Shellredirio.cpp : Defines the entry point for the console application.
+//
+// Variante de shell com possibilidade de redireccionamento de standard output
+
+// Exemplo:
+//	# type shellredirio.cpp > out.txt
+//	Redirecciona o output standard do comando type para o ficheiro out.txt
+//
+//  Jmartins, 2018
+
+#include "stdafx.h"
+
+INT SplitStr(LPTSTR str, TCHAR delimiter, TCHAR strs[][1024], int maxSplits);
+
+extern HANDLE outFileHandle;
+HANDLE LaunchProcess(TCHAR *cmdLine, TCHAR *outFile);
+	 
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+	TCHAR line[128];
+	TCHAR parts[2][1024];
+
+	_tprintf(_T("# "));
+	while (_getts_s(line, 128) != NULL) {
+		if (line[0] != 0)  {
+			if (_tcscmp(line, _T("exit")) == 0)
+				break;
+			int nParts = SplitStr(line, _T('>'), parts, 2);
+			 
+			HANDLE p = LaunchProcess(parts[0],nParts==1? NULL:parts[1]);
+			 
+			if (p == NULL)
+					_tprintf(_T("Error %d: executing %s\n"), GetLastError(), line); 
+			else {
+				
+                //printf("process %d created!\n", GetProcessId(p));
+				WaitForSingleObject(p, INFINITE);
+				if (outFileHandle != INVALID_HANDLE_VALUE)
+					CloseHandle(outFileHandle);
+				CloseHandle(p);
+                  
+			}
+		}
+		_tprintf(_T("# "));
+	}
+	return 0;
+}
+

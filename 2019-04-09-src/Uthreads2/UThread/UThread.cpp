@@ -315,6 +315,9 @@ BOOL UtJoin(HANDLE hthread) {
 	return TRUE;
 }
 
+DWORD UtGetSwitchCount() {
+	return 0;
+}
 //
 // Frees the resources associated with Thread..
 //
