@@ -4,7 +4,7 @@
 #include "stdafx.h"
 
 #include "Chrono.h"
-#include "cdl.h"
+
 
 #define NVALS (1000*1000*100)
 #define MAX_CORES 64
@@ -15,7 +15,6 @@ typedef struct {
 	DWORD *start, *end;
 	LONG partialResult;
 	HANDLE partialWorkDone;
-	PCDL pcdl;
 	char dummy[64];
 } WORKER_CTX, *PWORKER_CTX;
 
@@ -34,18 +33,6 @@ DWORD WINAPI WorkerFunc(LPVOID arg) {
 	}
 
 	SetEvent(ctx->partialWorkDone);
-	return 0;
-}
-
-DWORD WINAPI WorkerFuncCDL(LPVOID arg) {
-	PWORKER_CTX ctx = (PWORKER_CTX)arg;
-
-	ctx->partialResult = 0;
-	for (DWORD *curr = ctx->start; curr < ctx->end; ++curr) {
-		ctx->partialResult += *curr;
-	}
-
-	CDL_Signal(ctx->pcdl);
 	return 0;
 }
 
@@ -74,33 +61,33 @@ LONG ParallelAdderTP(DWORD vals[], DWORD size) {
 	return total;
 }
 
-LONG ParallelAdderTPCDL(DWORD vals[], DWORD size) {
-	SYSTEM_INFO si;
-	WORKER_CTX ctx[MAX_CORES];
-	GetSystemInfo(&si);
-
-	int nParts = si.dwNumberOfProcessors;
-	int partSize = size / nParts;
-	CDL cdl;
-	CDL_Init(&cdl, nParts);
-	for (int i = 0; i < nParts; ++i) {
-		ctx[i].start = vals + i * partSize;
-		ctx[i].end = ctx[i].start + partSize;
-		ctx[i].pcdl = &cdl;
-		if (ctx[i].end > vals + size) ctx[i].end = vals + size;
-	
-		QueueUserWorkItem(WorkerFuncCDL, ctx + i, 0);
-	}
-	LONG total = 0;
-
-	CDL_Wait(&cdl);
-	CDL_Destroy(&cdl);
-	for (int i = 0; i < nParts; ++i) {
-		total += ctx[i].partialResult;
-	}
-	
-	return total;
-}
+//LONG ParallelAdderTPCDL(DWORD vals[], DWORD size) {
+//	SYSTEM_INFO si;
+//	WORKER_CTX ctx[MAX_CORES];
+//	GetSystemInfo(&si);
+//
+//	int nParts = si.dwNumberOfProcessors;
+//	int partSize = size / nParts;
+//	CDL cdl;
+//	CDL_Init(&cdl, nParts);
+//	for (int i = 0; i < nParts; ++i) {
+//		ctx[i].start = vals + i * partSize;
+//		ctx[i].end = ctx[i].start + partSize;
+//		ctx[i].pcdl = &cdl;
+//		if (ctx[i].end > vals + size) ctx[i].end = vals + size;
+//	
+//		QueueUserWorkItem(WorkerFuncCDL, ctx + i, 0);
+//	}
+//	LONG total = 0;
+//
+//	CDL_Wait(&cdl);
+//	CDL_Destroy(&cdl);
+//	for (int i = 0; i < nParts; ++i) {
+//		total += ctx[i].partialResult;
+//	}
+//	
+//	return total;
+//}
 
 
 LONG SequentialAdder(DWORD vals[], DWORD size) {
@@ -192,8 +179,7 @@ int main()
 	Test(SequentialAdder, "Sequential", values, NVALS);
 	Test(ParallelAdder, "Parallel", values, NVALS);
 	Test(ParallelAdderTP, "Parallel Thread Pool", values, NVALS);
-	Test(ParallelAdderTPCDL, "Parallel Thread Pool With CDL synch", values, NVALS);
-
+	 
     return 0;
 }
 

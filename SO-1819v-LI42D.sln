@@ -41,7 +41,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MutexTests", "2019-04-09-sr
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UthreadLabTests", "2019-04-09-src\Uthreads2\UthreadLabTests\UthreadLabTests.vcxproj", "{37ACAAF2-88FD-40DB-849C-66312AB0D3C6}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "aula-04-30-windows1", "aula-04-30-windows1", "{7F420448-B665-4EDE-B522-FC101FCE2A3F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "aula-04-30-processes", "aula-04-30-processes", "{7F420448-B665-4EDE-B522-FC101FCE2A3F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Shell", "2019-04-30-src\Windows1\Shell\Shell.vcxproj", "{89C1AC07-5998-45FF-8F3A-B5DAC91DFA1F}"
 EndProject
@@ -53,11 +53,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnvTest", "EnvTest\EnvTest.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Type", "2019-04-30-src\Windows1\Type\Type.vcxproj", "{CB852724-C07B-428B-95ED-8C5277984DB6}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "aula-05-07-windows2", "aula-05-07-windows2", "{8BF5BBB1-84C8-4FD6-B35A-92EADACAC5BA}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "aula-05-07-threads", "aula-05-07-threads", "{8BF5BBB1-84C8-4FD6-B35A-92EADACAC5BA}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FirstThread", "2019-05-07-src\FirstThread\FirstThread.vcxproj", "{57C9F4CD-857E-4EE9-AD16-80F23E8A096E}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ParallelArraySum", "2019-05-07-src\ParallelArraySum\ParallelArraySum.vcxproj", "{70CC7DE2-3CE9-427B-8F43-7B171ED46C6C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "aula-05-09-threads", "aula-05-09-threads", "{5E8167DA-AA3F-4F1F-A259-820B0F1B2217}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ParallelArraySumOk", "2019-05-09-src\ParallelSumOk\ParallelSumOk.vcxproj", "{FEFF5DAB-AA18-43AD-A56A-066CA7F72358}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -281,6 +285,16 @@ Global
 		{70CC7DE2-3CE9-427B-8F43-7B171ED46C6C}.Release|x64.Build.0 = Release|x64
 		{70CC7DE2-3CE9-427B-8F43-7B171ED46C6C}.Release|x86.ActiveCfg = Release|Win32
 		{70CC7DE2-3CE9-427B-8F43-7B171ED46C6C}.Release|x86.Build.0 = Release|Win32
+		{FEFF5DAB-AA18-43AD-A56A-066CA7F72358}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{FEFF5DAB-AA18-43AD-A56A-066CA7F72358}.Debug|x64.ActiveCfg = Debug|x64
+		{FEFF5DAB-AA18-43AD-A56A-066CA7F72358}.Debug|x64.Build.0 = Debug|x64
+		{FEFF5DAB-AA18-43AD-A56A-066CA7F72358}.Debug|x86.ActiveCfg = Debug|Win32
+		{FEFF5DAB-AA18-43AD-A56A-066CA7F72358}.Debug|x86.Build.0 = Debug|Win32
+		{FEFF5DAB-AA18-43AD-A56A-066CA7F72358}.Release|Any CPU.ActiveCfg = Release|Win32
+		{FEFF5DAB-AA18-43AD-A56A-066CA7F72358}.Release|x64.ActiveCfg = Release|x64
+		{FEFF5DAB-AA18-43AD-A56A-066CA7F72358}.Release|x64.Build.0 = Release|x64
+		{FEFF5DAB-AA18-43AD-A56A-066CA7F72358}.Release|x86.ActiveCfg = Release|Win32
+		{FEFF5DAB-AA18-43AD-A56A-066CA7F72358}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -308,6 +322,7 @@ Global
 		{CB852724-C07B-428B-95ED-8C5277984DB6} = {7F420448-B665-4EDE-B522-FC101FCE2A3F}
 		{57C9F4CD-857E-4EE9-AD16-80F23E8A096E} = {8BF5BBB1-84C8-4FD6-B35A-92EADACAC5BA}
 		{70CC7DE2-3CE9-427B-8F43-7B171ED46C6C} = {8BF5BBB1-84C8-4FD6-B35A-92EADACAC5BA}
+		{FEFF5DAB-AA18-43AD-A56A-066CA7F72358} = {5E8167DA-AA3F-4F1F-A259-820B0F1B2217}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {61A0FB73-6195-447F-B4DF-DBF698DB4B2D}
