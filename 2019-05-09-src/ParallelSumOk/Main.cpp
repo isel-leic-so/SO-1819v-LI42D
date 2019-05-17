@@ -4,9 +4,9 @@
 #include "stdafx.h"
 
 #include "Chrono.h"
+#include "CountDownLatch.h"
 
-
-#define NVALS (1000*1000*100)
+#define NVALS (100*1000)
 #define MAX_PARTS 64
 
 DWORD values[NVALS];
@@ -15,7 +15,9 @@ typedef struct {
 	DWORD *start, *end;
 	LONG partialResult;
 
+	HANDLE partialWorkDone;
 
+	PCDL cdl;
 	// the next field is used tio guarantee the the line caches don't share
 	// contexts, in order to avoid the false sharing problem.
 	// Note that in this case a better way to avoid false sharing is to use a local accumulator in worker threads
@@ -50,7 +52,7 @@ DWORD WINAPI WorkerFuncTP(LPVOID arg) {
 		partial += *pi;
 	}
 	ctx->partialResult = partial;
-
+	SetEvent(ctx->partialWorkDone);
 	return 0;
 }
 
@@ -105,11 +107,15 @@ LONG ParallelSum(DWORD vals[], DWORD size) {
 	return total;
 }
 
-static VOID CtxInitTp(PWORKER_CTX pctx, PDWORD start, PDWORD end) {
+static HANDLE CtxInitTp(PWORKER_CTX pctx, PDWORD start, PDWORD end) {
 	pctx->start = start;
 	pctx->end = end;
 	pctx->partialResult = 0;
-
+	pctx->partialWorkDone = CreateEvent(NULL,
+		TRUE /*manual */,
+		FALSE,
+		NULL);
+	return pctx->partialWorkDone;
 }
 
 LONG ParallelSumTP(DWORD vals[], DWORD size) {
@@ -135,22 +141,113 @@ LONG ParallelSumTP(DWORD vals[], DWORD size) {
 
 	for (DWORD i = 0; i < nParts; ++i) {
 		// And now, I can we synchronize with the completion of partial adders?
-
+		WaitForSingleObject(ctx[i].partialWorkDone, INFINITE);
 		// WaitForSingleObject(threads[i], INFINITE);
 		
 		//printf("partial add[%d] = %d\n", i, ctx[i].partialCount);
 
 		total += ctx[i].partialResult;
 		//CloseHandle(threads[i]);
+		CloseHandle(ctx[i].partialWorkDone);
 		 
 	}
+	return total;
+}
+
+LONG ParallelSumTPMW(DWORD vals[], DWORD size) {
+	SYSTEM_INFO si;
+	DWORD nParts, partSize;
+
+	WORKER_CTX ctx[MAX_PARTS];
+	HANDLE workEvents[MAX_PARTS];
+
+	GetSystemInfo(&si);
+	nParts = si.dwNumberOfProcessors;
+	partSize = size / nParts;
+
+	for (DWORD i = 0; i < nParts; ++i) {
+		DWORD *start = vals + i * partSize;
+		DWORD *end = (i < nParts - 1) ? start + partSize :
+			vals + size;
+
+		workEvents[i] = CtxInitTp(ctx + i, start, end);
+		QueueUserWorkItem(WorkerFuncTP, ctx + i, 0);
+	}
+
+	LONG total = 0;
+
+	WaitForMultipleObjects(nParts, workEvents, TRUE, INFINITE);
+
+	for (DWORD i = 0; i < nParts; ++i) {
+		 
+		total += ctx[i].partialResult;
+		//CloseHandle(threads[i]);
+		CloseHandle(ctx[i].partialWorkDone);
+
+	}
+	return total;
+}
+
+
+static VOID CtxInitTpCdl(
+	PWORKER_CTX pctx, PDWORD start, PDWORD end, PCDL cdl) {
+	pctx->start = start;
+	pctx->end = end;
+	pctx->partialResult = 0;
+	pctx->cdl = cdl;
+}
+
+DWORD WINAPI WorkerFuncTPCDL(LPVOID arg) {
+	PWORKER_CTX ctx = (PWORKER_CTX)arg;
+	long partial = 0;
+
+
+	for (DWORD *pi = ctx->start; pi < ctx->end; ++pi) {
+		partial += *pi;
+	}
+	ctx->partialResult = partial;
+	CDL_Signal(ctx->cdl);
+	return 0;
+}
+
+LONG ParallelSumTPCDL(DWORD vals[], DWORD size) {
+	SYSTEM_INFO si;
+	DWORD nParts, partSize;
+
+	WORKER_CTX ctx[MAX_PARTS];
+	CDL cdl;
+
+	GetSystemInfo(&si);
+	nParts = si.dwNumberOfProcessors;
+	partSize = size / nParts;
+
+	CDL_Init(&cdl, nParts);
+
+	for (DWORD i = 0; i < nParts; ++i) {
+		DWORD *start = vals + i * partSize;
+		DWORD *end = (i < nParts - 1) ? start + partSize :
+			vals + size;
+
+		CtxInitTpCdl(ctx + i, start, end, &cdl);
+		QueueUserWorkItem(WorkerFuncTPCDL, ctx + i, 0);
+	}
+
+	LONG total = 0;
+
+	CDL_Wait(&cdl);
+
+	for (DWORD i = 0; i < nParts; ++i) 
+		total += ctx[i].partialResult;
+	
+	CDL_Destroy(&cdl);
 	return total;
 }
 
 // type representing an array sum function
 typedef LONG(*Adder)(DWORD vals[], DWORD size);
 
-#define NTRIES 20
+
+#define NTRIES 10
 LONG TestCountTicks(Adder adder, char *msg, DWORD vals[], DWORD size) {
 	printf("Test of: %s\n", msg);
 	DWORD minTime = MAXDWORD;
@@ -196,7 +293,13 @@ int main()
 	Test(SequentialSum, "Sequential", values, NVALS);
 	Test(ParallelSum, "Parallel", values, NVALS);
 	Test(ParallelSumTP, "Parallel Thread Pool", values, NVALS);
-	 
+	Test(ParallelSumTPMW, 
+		"Parallel Thread Pool With Multiple Wait", 
+		values, NVALS);
+	Test(ParallelSumTPCDL,
+		"Parallel Thread Pool With CountDownLatch Synchro", 
+		values, NVALS);
+
     return 0;
 }
 
