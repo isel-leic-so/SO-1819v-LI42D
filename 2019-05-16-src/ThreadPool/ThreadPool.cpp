@@ -10,6 +10,7 @@
 static BQUEUE queue;
 static HANDLE threads[NTHREADS];
 static DWORD nThreads;
+static DWORD initialized;
 
 typedef struct  {
 	LPTHREAD_START_ROUTINE func;
@@ -38,14 +39,19 @@ static DWORD WINAPI WorkerThreadFunc(LPVOID arg) {
 
 
 VOID TpInit() {
-	BQ_Init(&queue);
-	SYSTEM_INFO si;
+	DWORD i = InterlockedExchange(&initialized, 1);
+	if (i == 0) {
+	 
+		BQ_Init(&queue);
+		SYSTEM_INFO si;
 
-	GetSystemInfo(&si);
+		GetSystemInfo(&si);
 
-	for (int i = 0; i < si.dwNumberOfProcessors; ++i)
-		threads[i] = CreateThread(NULL, 0, WorkerThreadFunc, NULL,
-			0, NULL);
+		for (DWORD i = 0; i < si.dwNumberOfProcessors; ++i)
+			threads[i] = CreateThread(NULL, 0, WorkerThreadFunc, NULL,
+				0, NULL);
+	}
+	
 }
 
 VOID TpQueueItem(LPTHREAD_START_ROUTINE func, LPVOID arg) {

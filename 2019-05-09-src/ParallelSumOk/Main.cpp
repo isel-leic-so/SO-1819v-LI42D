@@ -5,6 +5,7 @@
 
 #include "Chrono.h"
 #include "CountDownLatch.h"
+#include "../../2019-05-16-src/Include/Threadpool.h"
 
 #define NVALS (100*1000)
 #define MAX_PARTS 64
@@ -243,6 +244,39 @@ LONG ParallelSumTPCDL(DWORD vals[], DWORD size) {
 	return total;
 }
 
+LONG ParallelSumSOTPCDL(DWORD vals[], DWORD size) {
+	SYSTEM_INFO si;
+	DWORD nParts, partSize;
+
+	WORKER_CTX ctx[MAX_PARTS];
+	CDL cdl;
+
+	GetSystemInfo(&si);
+	nParts = si.dwNumberOfProcessors;
+	partSize = size / nParts;
+
+	CDL_Init(&cdl, nParts);
+
+	for (DWORD i = 0; i < nParts; ++i) {
+		DWORD *start = vals + i * partSize;
+		DWORD *end = (i < nParts - 1) ? start + partSize :
+			vals + size;
+
+		CtxInitTpCdl(ctx + i, start, end, &cdl);
+		TpQueueItem(WorkerFuncTPCDL, ctx + i);
+	}
+
+	LONG total = 0;
+
+	CDL_Wait(&cdl);
+
+	for (DWORD i = 0; i < nParts; ++i)
+		total += ctx[i].partialResult;
+
+	CDL_Destroy(&cdl);
+	return total;
+}
+
 // type representing an array sum function
 typedef LONG(*Adder)(DWORD vals[], DWORD size);
 
@@ -290,6 +324,8 @@ int main()
 {
 	InitValues();
 
+	TpInit();
+
 	Test(SequentialSum, "Sequential", values, NVALS);
 	Test(ParallelSum, "Parallel", values, NVALS);
 	Test(ParallelSumTP, "Parallel Thread Pool", values, NVALS);
@@ -298,6 +334,9 @@ int main()
 		values, NVALS);
 	Test(ParallelSumTPCDL,
 		"Parallel Thread Pool With CountDownLatch Synchro", 
+		values, NVALS);
+	Test(ParallelSumSOTPCDL,
+		"SO Parallel Thread Pool With CountDownLatch Synchro",
 		values, NVALS);
 
     return 0;

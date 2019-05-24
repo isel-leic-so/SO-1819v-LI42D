@@ -25,16 +25,6 @@ UTILS_API VOID BQ_Init(PBQUEUE q) {
 	q->mutex = CreateMutex(NULL, FALSE, NULL);
 	q->hasItems = CreateSemaphore(NULL, 0, MAXINT, NULL);
 }
-typedef struct {
-	LIST_ENTRY list;
-	HANDLE mutex;
-	HANDLE hasItems;
-} BQUEUE, *PBQUEUE;
-
-typedef struct {
-	LIST_ENTRY link;
-	LPVOID item;
-} QNODE, *PQNODE;
 
 UTILS_API VOID BQ_Put(PBQUEUE q, LPVOID item) {
 	PQNODE node = createNode(item);
